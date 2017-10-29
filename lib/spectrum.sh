@@ -3,7 +3,7 @@
 # P.C. Shyamshankar <sykora@lucentbeing.com>
 # Copied from http://github.com/sykora/etc/blob/master/zsh/functions/spectrum/
 
-typeset -Ag FX FG BG
+#typeset -Ag FX FG BG
 
 FX=(
     [reset]="%{^[[00m%}"
@@ -15,8 +15,8 @@ FX=(
 )
 
 for color in {000..255}; do
-    FG[$color]="%{^[[38;5;${color}m%}"
-    BG[$color]="%{^[[48;5;${color}m%}"
+    FG[$color]="\033[30;38;5;${color}m"
+    BG[$color]="\033[30;48;5;${color}m"
 done
 
 
@@ -25,13 +25,14 @@ OSH_SPECTRUM_TEXT=${OSH_SPECTRUM_TEXT:-Arma virumque cano Troiae qui primus ab o
 # Show all 256 colors with color number
 function spectrum_ls() {
   for code in {000..255}; do
-    print -P -- "$code: %{$FG[$code]%}$OSH_SPECTRUM_TEXT%{$reset_color%}"
+    printf "%03d: %b\n" "$code" "${FG[$code]}${OSH_SPECTRUM_TEXT}\033[0m"
   done
+  echo ""
 }
 
 # Show all 256 colors where the background is set to specific color
 function spectrum_bls() {
   for code in {000..255}; do
-    print -P -- "$code: %{$BG[$code]%}$OSH_SPECTRUM_TEXT%{$reset_color%}"
+    printf "%03d: %b\n" "$code" "${BG[$code]}${OSH_SPECTRUM_TEXT}\033[0m"
   done
 }
